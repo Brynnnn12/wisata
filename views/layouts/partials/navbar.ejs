@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+<!-- <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
     <div class="container-fluid">
       <a class="navbar-brand text-white" href="/places">Wisata</a>
       <button
@@ -43,5 +43,164 @@
         </ul>
       </div>
     </div>
-  </nav>
-  
+  </nav> -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+  <div class="container">
+    <!-- Brand -->
+    <a class="navbar-brand fw-bold" href="#">Indonesie</a>
+
+    <!-- Burger Menu -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navbar Links -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/home">Beranda</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/places">Tempat</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/places/create">Tambah Tempat</a>
+        </li>
+      </ul>
+
+      <!-- Search Bar -->
+      <% if (currentUser) { %>
+        <form class="d-flex me-2" action="/places" method="GET">
+          <input class="form-control me-1" type="search" name="search" value="<%= search || '' %>"
+            placeholder="Cari tempat..." aria-label="Search" />
+          <button class="btn btn-outline-primary" type="submit">Search</button>
+        </form>
+
+        <!-- <form class="d-flex me-3">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-primary" type="submit">Search</button>
+          </form> -->
+        <% } %>
+
+          <!-- Authentication Buttons -->
+          <div class="d-flex">
+            <% if(!currentUser) { %>
+              <!-- Sign In Button -->
+              <a href="javascript:void(0)" class="btn btn-primary me-2" data-bs-toggle="modal"
+                data-bs-target="#loginModal">Sign In</a>
+
+              <!-- Modal Login -->
+              <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="loginModalLabel">Sign In</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <form action="/login" method="post" class="validated-form" novalidate>
+                        <div class="mb-3">
+                          <label for="username" class="form-label">Username</label>
+                          <input
+                            type="text"
+                            name="username"
+                            id="username"
+                            class="form-control"
+                            required
+                          />
+                          <div class="valid-feedback">Looks good!</div>
+                          <div class="invalid-feedback">Please select a valid state.</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                          <label for="password" class="form-label">Password</label>
+                          <input
+                            type="password"
+                            name="password"
+                            id="password"
+                            class="form-control"
+                            required
+                          />
+                          <div class="valid-feedback">Looks good!</div>
+                          <div class="invalid-feedback">Please select a valid state.</div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-success">Login</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Modal Login -->
+
+
+              <!-- Register Button -->
+              <a href="javascript:void(0)" class="btn btn-outline-primary" data-bs-toggle="modal"
+                data-bs-target="#registerModal">Login</a>
+              <!-- Modal Register -->
+              <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="registerModalLabel">Register</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <form action="/register" method="post" class="validated-form" novalidate>
+                        <div class="mb-3">
+                          <label for="username" class="form-label">Username</label>
+                          <input
+                            type="text"
+                            name="username"
+                            id="username"
+                            class="form-control"
+                            required
+                          />
+                          <div class="valid-feedback">Looks good!</div>
+                          <div class="invalid-feedback">Please select a valid state.</div>
+                        </div>
+                        <div class="mb-3">
+                          <label for="email" class="form-label">Email</label>
+                          <input
+                            type="text"
+                            name="email"
+                            id="email"
+                            class="form-control"
+                            required
+                          />
+                          <div class="valid-feedback">Looks good!</div>
+                          <div class="invalid-feedback">Please select a valid state.</div>
+                        </div>
+                        <div class="mb-3">
+                          <label for="password" class="form-label">Password</label>
+                          <input
+                            type="password"
+                            name="password"
+                            id="password"
+                            class="form-control"
+                            required
+                          />
+                          <div class="valid-feedback">Looks good!</div>
+                          <div class="invalid-feedback">Please select a valid state.</div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-success">Register</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Modal Register -->
+
+              <% } else { %>
+                <a href="/logout" class="btn btn-outline-primary" onclick="event.preventDefault();
+          document.getElementById('logout-form').submit();">Logout</a>
+                <form action="/logout" method="post" id="logout-form"></form>
+                <% } %>
+          </div>
+    </div>
+  </div>
+</nav>

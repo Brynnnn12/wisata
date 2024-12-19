@@ -4,9 +4,29 @@ const ErrorHandler = require('../utils/ErrorHandler');
 
 
 module.exports.index = async (req, res) => {
-    const places = await Place.find();
-    res.render('places/index', { places });
-}
+    // Ambil keyword dari query string
+    const { search } = req.query;
+
+    // Jika ada keyword, filter berdasarkan nama tempat atau deskripsi
+    let filter = {};
+    if (search) {
+        const regex = new RegExp(search, 'i'); // Case-insensitive search
+        filter = {
+            $or: [
+                { title: regex }, // Ganti 'name' dengan field yang sesuai di schema
+                { description: regex }, // Ganti 'description' dengan field yang sesuai di schema
+
+            ]
+        };
+    }
+
+    // Ambil data dari database berdasarkan filter
+    const places = await Place.find(filter);
+
+    // Render halaman dengan data yang difilter
+    res.render('places/index', { places, search });
+};
+
 
 module.exports.store = async (req, res, next) => {
     const images = req.files.map(file => ({
@@ -42,30 +62,49 @@ module.exports.edit = async (req, res) => {
     res.render('places/edit', { place });
 }
 module.exports.update = async (req, res) => {
-    const { place } = req.body
+    const { place } = req.body;
 
+    try {
+        // Update data pada database
+        const newPlace = await Place.findByIdAndUpdate(req.params.id, { ...place }, { new: true });
 
-    const newPlace = await Place.findByIdAndUpdate(req.params.id, {...place}, { new: true });
+        // Jika ada file yang diunggah
+        if (req.files && req.files.length > 0) {
+            // Validasi apakah `place.images` adalah array sebelum forEach
+            if (Array.isArray(place.images)) {
+                place.images.forEach(image => {
+                    fs.unlink(image.url, err => {
+                        if (err) {
+                            console.error("Error deleting file:", err);
+                        }
+                    });
+                });
+            } else {
+                console.warn("place.images is not an array or undefined");
+            }
 
-    if (req.files && req.files.length > 0) {
+            // Map file baru ke dalam array images
+            const images = req.files.map(file => ({
+                url: file.path,
+                filename: file.filename
+            }));
 
-        place.images.forEach(image => {
-            fs.unlink(image.url, err => new ExpressError(err));
-        })
+            // Perbarui gambar pada tempat baru
+            newPlace.images = images;
 
-        const images = req.files.map(file => ({
-            url: file.path,
-            filename: file.filename
-        }));
+            await newPlace.save();
+        }
 
-        newPlace.images = images;
-
-        await newPlace.save();
+        // Beri notifikasi berhasil dan redirect
+        req.flash('success_msg', 'Berhasil Mengupdate Tempat!');
+        res.redirect(`/places/${req.params.id}`);
+    } catch (err) {
+        console.error("Error updating place:", err);
+        req.flash('error_msg', 'Gagal Mengupdate Tempat!');
+        res.redirect(`/places`);
     }
+};
 
-    req.flash('success_msg', 'Berhasi Mengupdate Tempat!');
-    res.redirect(`/places/${req.params.id}`);
-}
 
 module.exports.destroy =  async (req, res) => {
     // await Place.findByIdAndDelete(req.params.id);

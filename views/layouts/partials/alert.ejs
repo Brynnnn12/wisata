@@ -1,28 +1,42 @@
-<% if(success_msg && success_msg.length) { %>
-
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-  <%= success_msg %>
-
-  <button
-    type="button"
-    class="btn-close"
-    data-bs-dismiss="alert"
-    aria-label="Close"
-  ></button>
-</div>
-<% } %>
-
-<% if(error_msg && error_msg.length) { %>
-
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-      <%= error_msg %>
-    
-      <button
-        type="button"
-        class="btn-close"
-        data-bs-dismiss="alert"
-        aria-label="Close"
-      ></button>
-    </div>
-    <% } %>
-    
+<% if (success_msg && success_msg.length) { %>
+  <script>
+    Swal.fire({
+      toast: true,
+      position: "top-end",
+      icon: "success",
+      title: "<%= success_msg %>",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      customClass: {
+        popup: 'small-toast' // Kustomisasi kelas CSS untuk ukuran
+      },
+      didOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer);
+        toast.addEventListener('mouseleave', Swal.resumeTimer);
+      }
+    });
+  </script>
+  <% } %>
+  
+  <% if (error_msg && error_msg.length) { %>
+  <script>
+    Swal.fire({
+      toast: true,
+      position: "top-end",
+      icon: "error",
+      title: "<%= error_msg %>",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      customClass: {
+        popup: 'small-toast' // Kustomisasi kelas CSS untuk ukuran
+      },
+      didOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer);
+        toast.addEventListener('mouseleave', Swal.resumeTimer);
+      }
+    });
+  </script>
+  <% } %>
+  
