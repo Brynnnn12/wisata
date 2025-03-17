@@ -14,7 +14,7 @@ const app = express();
 
 
 //mongod
-mongoose.connect('mongodb://127.0.0.1/bestpoints')
+mongoose.connect('mongodb+srv://brynnnn12:Mudzakir15#@mongodb.xx2ht.mongodb.net/?retryWrites=true&w=majority&appName=mongoDb')
     .then(() => {
         console.log('Connected to MongoDB...')
     }).catch((err) => {
